@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário de Avaliação</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .form-title {
+            color: #333;
+            font-size: 2em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .form-subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .rating-section {
+            margin-bottom: 30px;
+        }
+
+        .rating-label {
+            display: block;
+            color: #333;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .star-rating {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .star {
+            font-size: 2.5em;
+            color: #ddd;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .star:hover,
+        .star.active {
+            color: #ffd700;
+            transform: scale(1.1);
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .star:hover ~ .star {
+            color: #ddd;
+            transform: scale(1);
+        }
+
+        .rating-text {
+            color: #666;
+            font-size: 1em;
+            margin-top: 10px;
+            min-height: 20px;
+        }
+
+        .comment-section {
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .comment-label {
+            display: block;
+            color: #333;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .comment-input {
+            width: 100%;
+            min-height: 100px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+            font-family: inherit;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .comment-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
+        }
+
+        .webhook-section {
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .analyst-section {
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .analyst-label {
+            display: block;
+            color: #333;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .analyst-select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+        }
+
+        .analyst-select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
+        }
+
+        .requester-section {
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .anonymous-checkbox {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            gap: 10px;
+        }
+
+        .checkbox-input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #667eea;
+        }
+
+        .checkbox-label {
+            color: #333;
+            font-size: 1em;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .requester-name {
+            transition: opacity 0.3s ease;
+        }
+
+        .requester-name.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .requester-label {
+            display: block;
+            color: #333;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .requester-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .requester-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
+        }
+
+        .webhook-section {
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .webhook-label {
+            display: block;
+            color: #333;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .webhook-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.9em;
+            font-family: monospace;
+            transition: border-color 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .webhook-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
+        }
+
+        .submit-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1em;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .status-message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 500;
+            display: none;
+        }
+
+        .status-success {
+            background: rgba(76, 175, 80, 0.1);
+            color: #4caf50;
+            border: 1px solid rgba(76, 175, 80, 0.3);
+        }
+
+        .status-error {
+            background: rgba(244, 67, 54, 0.1);
+            color: #f44336;
+            border: 1px solid rgba(244, 67, 54, 0.3);
+        }
+
+        .instructions {
+            background: rgba(33, 150, 243, 0.1);
+            border: 1px solid rgba(33, 150, 243, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            color: #1976d2;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        .instructions h3 {
+            margin-bottom: 10px;
+            color: #1565c0;
+        }
+
+        @media (max-width: 600px) {
+            .form-container {
+                padding: 30px 20px;
+            }
+            
+            .star {
+                font-size: 2em;
+            }
+            
+            .form-title {
+                font-size: 1.7em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        
+        <div class="centralizada">
+            <img src="Logo_JD2.png">
+        </div>
+        <h1 class="form-title">✨ Avaliação - Edge ITOPS</h1>
+        <p class="form-subtitle">Compartilhe sua experiência conosco</p>
+        
+        <!--div class="instructions">
+            <h3>📋 Como configurar:</h3>
+            <p>1. No Teams, acesse Power Automate (Workflow)</p>
+            <p>2. Crie um fluxo "Quando uma solicitação HTTP é recebida"</p>
+            <p>3. Copie a URL do webhook e cole no campo abaixo</p>
+            <p>4. Configure o fluxo para postar no canal desejado</p>
+        </div-->
+
+        <form id="ratingForm">
+            <!--div class="webhook-section">
+                <label class="webhook-label" for="webhookUrl">🔗 URL do Webhook do Teams:</label>
+                <input 
+                    type="url" 
+                    id="webhookUrl" 
+                    class="webhook-input" 
+                    placeholder="https://prod-xx.westus.logic.azure.com:443/workflows/..."
+                    required
+                >
+            </div-->
+
+            <div class="analyst-section">
+                <label class="analyst-label" for="analyst">👤 Analista responsável:</label>
+                <select id="analyst" class="analyst-select" required>
+                    <option value="">Selecione o analista...</option>
+                    <option value="Ana Silva">Arlei Jesus</option>
+                    <option value="Bruno Santos">Lucas Lima</option>
+                    <option value="Carlos Oliveira">Beatriz Silva</option>
+                    <option value="Diana Costa">Renata Almeida</option>
+                    <!--               
+                    <option value="Eduardo Lima">Eduardo Lima</option>
+                    <option value="Fernanda Alves">Fernanda Alves</option>
+                    <option value="Gabriel Rocha">Gabriel Rocha</option>
+                    <option value="Helena Martins">Helena Martins</option>
+                    <option value="Igor Ferreira">Igor Ferreira</option>
+                    <option value="Julia Mendes">Julia Mendes</option>
+                    --> 
+                </select>
+            </div>
+
+            <div class="rating-section">
+                <label class="rating-label">⭐ Sua avaliação:</label>
+                <div class="star-rating" id="starRating">
+                    <span class="star" data-rating="1">★</span>
+                    <span class="star" data-rating="2">★</span>
+                    <span class="star" data-rating="3">★</span>
+                    <span class="star" data-rating="4">★</span>
+                    <span class="star" data-rating="5">★</span>
+                </div>
+                <div class="rating-text" id="ratingText">Clique nas estrelas para avaliar</div>
+            </div>
+
+            <div class="requester-section">
+                <div class="anonymous-checkbox">
+                    <input type="checkbox" id="anonymous" class="checkbox-input">
+                    <label for="anonymous" class="checkbox-label">🔒 Enviar de forma anônima</label>
+                </div>
+                <div class="requester-name" id="requesterNameDiv">
+                    <label class="requester-label" for="requesterName">✍️ Seu nome:</label>
+                    <input 
+                        type="text" 
+                        id="requesterName" 
+                        class="requester-input"
+                        placeholder="Digite seu nome..."
+                        maxlength="100"
+                    >
+                </div>
+            </div>
+
+            <div class="comment-section">
+                <label class="comment-label" for="comment">💬 Comentário (opcional):</label>
+                <textarea 
+                    id="comment" 
+                    class="comment-input" 
+                    placeholder="Conte-nos mais sobre sua experiência..."
+                    maxlength="500"
+                ></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+                Enviar Avaliação
+            </button>
+
+            <div class="status-message" id="statusMessage"></div>
+        </form>
+    </div>
+
+    <script>
+        let selectedRating = 0;
+        const stars = document.querySelectorAll('.star');
+        const ratingText = document.getElementById('ratingText');
+        const form = document.getElementById('ratingForm');
+        const statusMessage = document.getElementById('statusMessage');
+        const submitBtn = document.getElementById('submitBtn');
+
+        const ratingTexts = {
+            1: '⭐ Muito insatisfeito',
+            2: '⭐⭐ Insatisfeito',
+            3: '⭐⭐⭐ Neutro',
+            4: '⭐⭐⭐⭐ Satisfeito',
+            5: '⭐⭐⭐⭐⭐ Muito satisfeito'
+        };
+
+        // Configurar avaliação por estrelas
+        stars.forEach((star, index) => {
+            star.addEventListener('click', () => {
+                selectedRating = parseInt(star.dataset.rating);
+                updateStars();
+                updateRatingText();
+            });
+
+            star.addEventListener('mouseenter', () => {
+                const rating = parseInt(star.dataset.rating);
+                highlightStars(rating);
+            });
+        });
+
+        document.getElementById('starRating').addEventListener('mouseleave', () => {
+            updateStars();
+        });
+
+        // Configurar checkbox anônimo
+        const anonymousCheckbox = document.getElementById('anonymous');
+        const requesterNameDiv = document.getElementById('requesterNameDiv');
+        const requesterNameInput = document.getElementById('requesterName');
+
+        anonymousCheckbox.addEventListener('change', () => {
+            if (anonymousCheckbox.checked) {
+                requesterNameDiv.classList.add('disabled');
+                requesterNameInput.value = '';
+                requesterNameInput.required = false;
+            } else {
+                requesterNameDiv.classList.remove('disabled');
+                requesterNameInput.required = true;
+            }
+        });
+
+        function highlightStars(rating) {
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+        }
+
+        function updateStars() {
+            highlightStars(selectedRating);
+        }
+
+        function updateRatingText() {
+            if (selectedRating > 0) {
+                ratingText.textContent = ratingTexts[selectedRating];
+                ratingText.style.color = '#333';
+            } else {
+                ratingText.textContent = 'Clique nas estrelas para avaliar';
+                ratingText.style.color = '#666';
+            }
+        }
+
+        function showStatus(message, isError = false) {
+            statusMessage.textContent = message;
+            statusMessage.className = `status-message ${isError ? 'status-error' : 'status-success'}`;
+            statusMessage.style.display = 'block';
+            
+            setTimeout(() => {
+                statusMessage.style.display = 'none';
+            }, 5000);
+        }
+
+        // Enviar formulário
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (selectedRating === 0) {
+                showStatus('❌ Por favor, selecione uma avaliação!', true);
+                return;
+            }
+
+            // const webhookUrl = document.getElementById('webhookUrl').value.trim();
+            const webhookUrl = "https://prod-88.westus.logic.azure.com:443/workflows/c6a679d7c78145ba91a4bfc2f4c99192/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=9EP7eN4QKebiHccYYAqM4f_zxiYHJi29N5JSiybPWko"
+            if (!webhookUrl) {
+                showStatus('❌ Por favor, insira a URL do webhook!', true);
+                return;
+            }
+
+            const analyst = document.getElementById('analyst').value;
+            if (!analyst) {
+                showStatus('❌ Por favor, selecione o analista responsável!', true);
+                return;
+            }
+
+            const isAnonymous = document.getElementById('anonymous').checked;
+            const requesterName = document.getElementById('requesterName').value.trim();
+            
+            if (!isAnonymous && !requesterName) {
+                showStatus('❌ Por favor, insira seu nome ou marque a opção anônima!', true);
+                return;
+            }
+
+            const comment = document.getElementById('comment').value.trim();
+            const timestamp = new Date().toLocaleString('pt-BR');
+
+            const payload = {
+                analyst: analyst,
+                rating: selectedRating,
+                ratingText: ratingTexts[selectedRating],
+                requester: isAnonymous ? 'Anônimo' : requesterName,
+                comment: comment || 'Nenhum comentário adicional',
+                timestamp: timestamp,
+                summary: `Nova avaliação para ${analyst}: ${ratingTexts[selectedRating]} - Por: ${isAnonymous ? 'Anônimo' : requesterName}`
+            };
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Enviando...';
+
+            try {
+                const response = await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    showStatus('✅ Avaliação enviada com sucesso para o Teams!');
+                    form.reset();
+                    selectedRating = 0;
+                    updateStars();
+                    updateRatingText();
+                    // Resetar estado do checkbox anônimo
+                    requesterNameDiv.classList.remove('disabled');
+                    requesterNameInput.required = true;
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+            } catch (error) {
+                console.error('Erro ao enviar:', error);
+                showStatus(`❌ Erro ao enviar: ${error.message}`, true);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Enviar Avaliação';
+            }
+        });
+
+        // Inicializar
+        updateRatingText();
+    </script>
+</body>
+</html>
